@@ -29,12 +29,29 @@ function FitBounds({ stops }: { stops: MapStop[] }) {
   return null;
 }
 
+/** Pans to whichever stop the timeline selected, keeping the current zoom. */
+function PanToFocused({ stops, focusedKey }: { stops: MapStop[]; focusedKey: string | null }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map || !focusedKey) return;
+    const stop = stops.find((s) => s.key === focusedKey);
+    if (stop) map.panTo({ lat: stop.lat, lng: stop.lng });
+  }, [map, stops, focusedKey]);
+
+  return null;
+}
+
 export default function GoogleTripMap({
   stops,
   center,
+  focusedKey = null,
+  onSelect,
 }: {
   stops: MapStop[];
   center: { lat: number; lng: number };
+  focusedKey?: string | null;
+  onSelect?: (key: string | null) => void;
 }) {
   const [open, setOpen] = useState<MapStop | null>(null);
 
@@ -50,23 +67,35 @@ export default function GoogleTripMap({
         className="h-full w-full"
       >
         <FitBounds stops={stops} />
+        <PanToFocused stops={stops} focusedKey={focusedKey} />
 
-        {stops.map((stop) => (
-          <AdvancedMarker
-            key={stop.key}
-            position={{ lat: stop.lat, lng: stop.lng }}
-            onClick={() => setOpen(stop)}
-            title={stop.name}
-          >
-            <span
-              className={`grid h-7 min-w-7 place-items-center rounded-full border-2 border-white px-1.5 text-xs font-bold text-white shadow-md ${
-                stop.kind === "restaurant" ? "bg-[#b4622c]" : "bg-[#0f6f5c]"
-              }`}
+        {stops.map((stop) => {
+          const isFocused = focusedKey === stop.key;
+          return (
+            <AdvancedMarker
+              key={stop.key}
+              position={{ lat: stop.lat, lng: stop.lng }}
+              onClick={() => {
+                setOpen(stop);
+                onSelect?.(stop.key);
+              }}
+              title={stop.name}
+              zIndex={isFocused ? 1000 : undefined}
             >
-              {stop.label || (stop.kind === "restaurant" ? "▲" : "●")}
-            </span>
-          </AdvancedMarker>
-        ))}
+              <span
+                className={`grid place-items-center rounded-full border-2 border-white font-bold text-white transition-all ${
+                  isFocused
+                    ? "h-9 min-w-9 px-2 text-sm shadow-lg bg-ink"
+                    : `h-7 min-w-7 px-1.5 text-xs shadow-md ${
+                        stop.kind === "restaurant" ? "bg-[#b4622c]" : "bg-[#0f6f5c]"
+                      }`
+                }`}
+              >
+                {stop.label || (stop.kind === "restaurant" ? "▲" : "●")}
+              </span>
+            </AdvancedMarker>
+          );
+        })}
 
         {open && (
           <InfoWindow

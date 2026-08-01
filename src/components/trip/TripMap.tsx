@@ -31,10 +31,15 @@ export default function TripMap({
   stops,
   center,
   className = "",
+  focusedKey = null,
+  onSelect,
 }: {
   stops: MapStop[];
   center: { lat: number; lng: number } | null;
   className?: string;
+  /** Stop the timeline asked the map to highlight, if any. */
+  focusedKey?: string | null;
+  onSelect?: (key: string | null) => void;
 }) {
   if (!center) {
     return (
@@ -56,9 +61,9 @@ export default function TripMap({
       className={`relative overflow-hidden rounded-[var(--radius-card)] border border-line ${className}`}
     >
       {HAS_GOOGLE ? (
-        <GoogleTripMap stops={stops} center={center} />
+        <GoogleTripMap stops={stops} center={center} focusedKey={focusedKey} onSelect={onSelect} />
       ) : (
-        <LeafletTripMap stops={stops} center={center} />
+        <LeafletTripMap stops={stops} center={center} focusedKey={focusedKey} onSelect={onSelect} />
       )}
     </div>
   );

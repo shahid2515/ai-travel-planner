@@ -9,6 +9,15 @@ Gemini **or** OpenAI · OpenStreetMap **or** Google Places · Prisma + Postgres
 Both integration points are provider-agnostic: the app runs entirely on free tiers with no credit
 card, and switches to OpenAI + Google Places by adding environment variables.
 
+**Live demo:** https://ai-travel-planner-khaki-psi.vercel.app
+
+![The itinerary view — numbered stops in the timeline match numbered pins on the map](docs/itinerary.png)
+
+Selecting a stop in the plan highlights it on the map, so "stop 2" and "12:30 lunch" are visibly
+the same thing.
+
+![The planner form](docs/planner.png)
+
 ---
 
 ## Run it
@@ -95,7 +104,10 @@ src/
     trip/LeafletTripMap.tsx     Leaflet + OSM tiles, no key required
     trip/BudgetPanel.tsx        stacked-bar budget breakdown
     trip/PlaceCard.tsx          place + restaurant cards
+  app/error.tsx, loading.tsx    failure and loading states
+tests/                          unit tests (Node's built-in runner)
   lib/
+    normalise.ts                schema-proof guard rails (pure, unit tested)
     plan.ts                     the orchestration described above
     llm.ts                      provider selection (Gemini / OpenAI) + generation
     openai-schema.ts            the strict JSON Schema the model must fill
@@ -113,12 +125,14 @@ src/
 | --- | --- |
 | `npm run dev` | Dev server |
 | `npm run build` | `prisma generate` then a production build |
+| `npm run check` | Typecheck + lint + unit tests — what CI runs |
+| `npm test` | 44 unit tests over the pure logic (Node's built-in runner, no framework) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint |
 | `npm run doctor` | Checks each API key against its live service and names the exact fix |
 | `npm run verify` | Generates 4 real trips against the running app and audits them (below) |
 | `npm run test:lookup` | Checks that real venues are found and invented ones are not |
-| `npm run db:studio` | Browse the SQLite database |
+| `npm run db:studio` | Browse the database |
 
 ## Verifying the output
 
@@ -138,8 +152,21 @@ npm run dev                # one terminal
 npm run verify             # another — or `npm run verify tokyo` for a single scenario
 ```
 
-Non-zero exit on any failure, so it can gate a deploy. Without an OpenAI key it runs against demo
-mode and reports the Google-dependent checks as informational.
+Non-zero exit on any failure, so it can gate a deploy. With no model key it runs against demo mode
+and reports the lookup-dependent checks as informational.
+
+## Quality gates
+
+| Layer | Covers |
+| --- | --- |
+| `npm test` | Dates, currency, durations, budget normalisation, map-stop derivation |
+| `npm run test:lookup` | The hallucination guard, in both directions |
+| `npm run verify` | Four live generations, audited end to end |
+| GitHub Actions | Typecheck, lint, unit tests and a production build on every push |
+
+CI deliberately skips `verify` and `test:lookup`: one spends real API quota on every push, the
+other depends on a third-party geocoder being up, so it would fail builds for reasons unrelated to
+the code.
 
 ## Notes
 

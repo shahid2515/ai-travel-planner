@@ -22,6 +22,11 @@ export interface MapStop {
   lng: number;
   kind: "place" | "restaurant";
   time: string;
+  /** Index of the activity this pin came from, so the timeline can show the
+   *  same number. Without it the map says "3" and the itinerary says "2pm",
+   *  and nothing tells the reader they are the same stop. -1 when not from a
+   *  specific activity (the whole-trip view). */
+  activityIndex: number;
 }
 
 /** Map pins for one day, in visiting order, skipping anything Google could not place. */
@@ -40,8 +45,11 @@ export function stopsForDay(payload: TripPayload, dayIndex: number): MapStop[] {
       name: match!.name,
       lat: g.lat,
       lng: g.lng,
-      kind: "cuisine" in match! ? "restaurant" : "place",
+      // Membership, not duck-typing on a "cuisine" field: a restaurant with a
+      // missing field would silently render with the wrong pin colour.
+      kind: payload.restaurants.includes(match as never) ? "restaurant" : "place",
       time: activity.time,
+      activityIndex: i,
     });
   });
 
@@ -61,6 +69,7 @@ export function allStops(payload: TripPayload): MapStop[] {
         lng: i.google!.lng,
         kind,
         time: "",
+        activityIndex: -1,
       }));
 
   return [...build(payload.places, "place"), ...build(payload.restaurants, "restaurant")];

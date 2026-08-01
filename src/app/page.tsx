@@ -29,7 +29,9 @@ export default function Home() {
     <div>
       <section className="border-b border-line bg-surface">
         <div className="mx-auto grid w-full max-w-6xl gap-12 px-5 py-14 lg:grid-cols-[1fr_1.05fr] lg:py-20">
-          <div className="flex flex-col justify-center">
+          {/* Top-aligned on desktop: the form column is much taller, and
+            centring left a large void above the headline. */}
+        <div className="flex flex-col justify-center lg:justify-start lg:pt-3">
             <p className="eyebrow">AI travel planner</p>
             <h1 className="mt-4 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
               A whole trip, costed and mapped, in about thirty seconds.
@@ -40,7 +42,7 @@ export default function Home() {
               spend.
             </p>
 
-            <dl className="mt-9 grid max-w-md grid-cols-3 gap-6 border-t border-line pt-7">
+            <dl className="mt-9 grid max-w-lg grid-cols-3 gap-x-8 gap-y-6 border-t border-line pt-7">
               {[
                 ["Budgeted", "to the category"],
                 ["Verified", `against ${places}`],
@@ -53,22 +55,31 @@ export default function Home() {
               ))}
             </dl>
 
-            <p className="mt-8 max-w-md rounded-xl border border-line bg-sunk px-4 py-3 text-sm text-ink-soft">
-              {provider ? (
-                <>
-                  <strong className="font-semibold">Running on {provider.label}</strong> (
-                  <code className="font-mono text-xs">{provider.model}</code>) with venue lookups
-                  against {places}.
-                </>
-              ) : (
-                <>
-                  <strong className="font-semibold">Demo mode.</strong> No model key is set, so a
-                  sample Lisbon itinerary is served instead. Add{" "}
-                  <code className="font-mono text-xs">GEMINI_API_KEY</code> (free, no card) to{" "}
-                  <code className="font-mono text-xs">.env</code> and restart to generate real
-                  trips.
-                </>
-              )}
+            {/* A quiet status line, not a boxed notice — it was reading as a
+                warning when it is just describing the configuration. */}
+            <p className="mt-7 flex max-w-md items-start gap-2.5 text-sm leading-relaxed text-muted">
+              <span
+                aria-hidden
+                className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand"
+              />
+              <span>
+                {provider ? (
+                  <>
+                    Running on <strong className="font-semibold text-ink-soft">
+                      {provider.label}
+                    </strong>{" "}
+                    <code className="font-mono text-xs">{provider.model}</code>, with venue lookups
+                    against {places}.
+                  </>
+                ) : (
+                  <>
+                    <strong className="font-semibold text-ink-soft">Demo mode.</strong> No model key
+                    is set, so a sample Lisbon itinerary is served instead. Add{" "}
+                    <code className="font-mono text-xs">GEMINI_API_KEY</code> (free, no card) to{" "}
+                    <code className="font-mono text-xs">.env</code> and restart.
+                  </>
+                )}
+              </span>
             </p>
           </div>
 

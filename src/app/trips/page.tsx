@@ -27,12 +27,23 @@ export default async function TripsPage() {
       </div>
 
       {trips.length === 0 ? (
-        <div className="card mt-10 grid place-items-center px-6 py-20 text-center">
-          <div className="max-w-sm">
+        <div className="mt-10 rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface px-6 py-16 text-center">
+          <div className="mx-auto max-w-sm">
+            {/* Ghosts of the cards that will appear here — reads as "this fills
+                up" rather than "something is missing". */}
+            <div aria-hidden className="mb-8 flex justify-center gap-2.5">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="h-16 w-12 rounded-lg border border-line bg-gradient-to-b from-brand-wash to-transparent"
+                  style={{ opacity: 1 - i * 0.3 }}
+                />
+              ))}
+            </div>
             <p className="text-lg font-semibold">No trips yet</p>
             <p className="mt-2 text-sm leading-relaxed text-muted">
-              Pick a destination and a budget on the home page and the first itinerary will land
-              here in about thirty seconds.
+              Pick a destination and a budget on the home page. The first itinerary lands here in
+              about thirty seconds, and stays for whenever you go.
             </p>
             <Link href="/" className="btn btn-primary mt-6">
               Start planning

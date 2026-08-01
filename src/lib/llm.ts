@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { normaliseTrip } from "./normalise";
 import { TRIP_JSON_SCHEMA } from "./openai-schema";
 import type { GeneratedTrip, TripInput } from "./types";
 
@@ -269,36 +270,4 @@ function parseTrip(raw: string): GeneratedTrip {
   }
 
   return trip;
-}
-
-/** Guard rails for the handful of things a schema cannot enforce. */
-function normaliseTrip(trip: GeneratedTrip, input: TripInput): GeneratedTrip {
-  const days = [...(trip.days ?? [])]
-    .sort((a, b) => a.day - b.day)
-    .slice(0, input.days)
-    .map((day, i) => ({
-      ...day,
-      day: i + 1,
-      activities: [...(day.activities ?? [])].sort((a, b) =>
-        String(a.time).localeCompare(String(b.time)),
-      ),
-    }));
-
-  const breakdown = (trip.budget?.breakdown ?? []).filter((b) => b.amount > 0);
-  const total = trip.budget?.total || breakdown.reduce((sum, b) => sum + b.amount, 0);
-
-  return {
-    ...trip,
-    days,
-    places: trip.places ?? [],
-    restaurants: trip.restaurants ?? [],
-    tips: trip.tips ?? [],
-    packingList: trip.packingList ?? [],
-    budget: {
-      ...trip.budget,
-      total,
-      perPerson: Math.round(total / Math.max(1, input.travelers)),
-      breakdown,
-    },
-  };
 }

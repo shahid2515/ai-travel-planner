@@ -44,6 +44,27 @@
   button {
     font: inherit;
   }
+
+  /* Keyboard users could not see where they were: only .field had a focus
+     style, so tabbing through buttons, chips and links was invisible.
+     :focus-visible keeps it off for mouse clicks. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Respect the OS setting rather than animating regardless. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {

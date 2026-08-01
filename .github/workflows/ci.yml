@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` triggers postinstall -> prisma generate, which needs a
+      # DATABASE_URL to be present but never connects to it.
+      - name: Install
+        run: npm ci
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          DIRECT_URL: postgresql://ci:ci@localhost:5432/ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      # Build without `prisma migrate deploy` — CI has no database, and a
+      # migration is not what we are testing here.
+      - name: Build
+        run: npx prisma generate && npx next build
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          DIRECT_URL: postgresql://ci:ci@localhost:5432/ci
+
+# Deliberately not run here:
+#   npm run verify      — spends real API quota on every push
+#   npm run test:lookup — depends on a third-party geocoder being up, so it
+#                         would fail the build for reasons unrelated to the code

@@ -14,7 +14,9 @@
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "test:lookup": "node scripts/test-lookup.mts"
+    "test:lookup": "node scripts/test-lookup.mts",
+    "test": "node --test \"tests/**/*.test.mts\"",
+    "check": "npm run typecheck && npm run lint && npm test"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
