@@ -8,7 +8,9 @@ const STEPS = [
   "Choosing places worth your time",
   "Picking restaurants across price ranges",
   "Ordering the days so you are not criss-crossing the city",
-  "Checking every venue against Google Places",
+  // Provider-neutral: this is a client component and the place provider is
+  // chosen by a server-only key, so it cannot name the service here.
+  "Checking every venue against a real place database",
   "Costing it out",
 ];
 

@@ -5,14 +5,21 @@ import { useState } from "react";
 
 export default function TripActions({ tripId }: { tripId: string }) {
   const router = useRouter();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<"idle" | "done" | "failed">("idle");
   const [deleting, setDeleting] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
   async function copyLink() {
-    await navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
+    // The Clipboard API rejects on denied permission and is absent entirely
+    // outside secure contexts. Without this the button would silently do
+    // nothing and throw into the console.
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied("done");
+    } catch {
+      setCopied("failed");
+    }
+    setTimeout(() => setCopied("idle"), 2200);
   }
 
   async function remove() {
@@ -28,9 +35,14 @@ export default function TripActions({ tripId }: { tripId: string }) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    // no-print: these controls are meaningless on paper
+    <div className="no-print flex flex-wrap gap-2">
       <button type="button" onClick={copyLink} className="btn btn-ghost text-sm">
-        {copied ? "Link copied" : "Copy link"}
+        {copied === "done"
+          ? "Link copied"
+          : copied === "failed"
+            ? "Copy from the address bar"
+            : "Copy link"}
       </button>
       <button type="button" onClick={() => window.print()} className="btn btn-ghost text-sm">
         Print / PDF

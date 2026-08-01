@@ -206,3 +206,50 @@
 .gm-style {
   font-family: var(--font-sans) !important;
 }
+
+/* ── Print / save as PDF ──────────────────────────────────────
+   The trip page has a Print button, and travellers genuinely do print
+   itineraries. Without this, the output carries the nav, the action
+   buttons and a map that renders as a grey box, and days split across
+   page breaks mid-activity. */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  /* Interactive maps do not print usefully — the tiles are lazy-loaded and
+     the controls are meaningless on paper. Addresses stay in the timeline. */
+  .leaflet-container,
+  .gm-style {
+    display: none !important;
+  }
+
+  .card {
+    border-color: #ccc;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  li,
+  article {
+    break-inside: avoid;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #555;
+    word-break: break-all;
+  }
+}
