@@ -19,6 +19,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: trip.trip.title, description: trip.trip.summary };
 }
 
+/**
+ * A missing trip renders the not-found UI but returns HTTP 200, not 404.
+ *
+ * That is how Next.js behaves for any streamed response: the headers are sent
+ * before the page discovers the row is missing, so the status can no longer be
+ * changed. Next compensates by injecting <meta name="robots" content="noindex">
+ * into the streamed HTML, which is verified present, so search engines do not
+ * index dead trip links.
+ *
+ * Getting a real 404 would mean checking existence in `proxy` before the body
+ * streams — a database round trip on every request to this route, for a status
+ * code no user sees. Not worth it here. Revisit if these links ever need to be
+ * crawled or monitored by status code.
+ */
+
 export default async function TripPage({ params }: Props) {
   const { id } = await params;
   const payload = await getTrip(id);
