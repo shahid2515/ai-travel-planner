@@ -1,14 +1,19 @@
-// Prisma schema — SQLite for local dev.
-// To deploy (Vercel + Neon/Supabase): change provider to "postgresql",
-// point DATABASE_URL at the hosted database, then run `npx prisma migrate deploy`.
+// Prisma schema — Postgres (Neon), used in both local dev and production.
+//
+// Two URLs on purpose:
+//   DATABASE_URL  pooled endpoint. Serverless functions open a new connection
+//                 per invocation and would exhaust Postgres without a pooler.
+//   DIRECT_URL    direct endpoint. Migrations need a real session, which the
+//                 pooler cannot give them.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Trip {

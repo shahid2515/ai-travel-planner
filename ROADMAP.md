@@ -16,7 +16,7 @@ you can put a live link to on Upwork. Phases 0–3 are **already built**; the re
 | Styling | Tailwind v4 + a small CSS layer (`.card`, `.field`, `.btn`, `.chip`) | Fast, and avoids a 40-file component library in a portfolio piece |
 | LLM call | Chat Completions + **Structured Outputs** (`json_schema`, `strict: true`) | Guarantees the response shape. No JSON repair, no retry loop |
 | Maps | **Places API (New)** server-side, Maps JavaScript API in the browser | One API covers search, autocomplete and photos; two keys with different restrictions |
-| Database | Prisma + SQLite locally, Postgres in production | `npx prisma migrate dev` and you have a database; changing provider is a two-line diff |
+| Database | Prisma + Postgres (Neon) | Same database locally and in production, so nothing is discovered only after deploying |
 | Auth | Anonymous cookie (`tp_owner`) | Save-for-later works with zero friction. Real auth is one function away |
 | No-key mode | Bundled Lisbon itinerary | The demo never breaks in front of a client, and reviewers can run it instantly |
 

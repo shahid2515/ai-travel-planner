@@ -4,7 +4,7 @@ Pick a destination and a budget. Get a costed, day-by-day itinerary with real pl
 restaurants and a live map — saved for later.
 
 **Stack:** Next.js 16 (App Router) · TypeScript · Tailwind v4 · Structured Outputs on
-Gemini **or** OpenAI · OpenStreetMap **or** Google Places · Prisma + SQLite
+Gemini **or** OpenAI · OpenStreetMap **or** Google Places · Prisma + Postgres
 
 Both integration points are provider-agnostic: the app runs entirely on free tiers with no credit
 card, and switches to OpenAI + Google Places by adding environment variables.
@@ -16,7 +16,7 @@ card, and switches to OpenAI + Google Places by adding environment variables.
 ```bash
 npm install
 cp .env.example .env      # optional — the app runs without keys
-npx prisma migrate dev    # creates prisma/dev.db
+npx prisma migrate deploy # applies the schema to your Postgres database
 npm run dev               # http://localhost:3000
 ```
 
@@ -63,7 +63,7 @@ POST /api/trips/generate
   ├─ 4. Anything the lookup cannot find is kept but rendered without a pin,
   │     so hallucinated venues never end up on the map
   │
-  └─ 5. Save to SQLite, redirect to /trips/{id}
+  └─ 5. Save to Postgres, redirect to /trips/{id}
 ```
 
 Step 3 is the point of the whole app. A model asked for restaurants will occasionally invent one;
