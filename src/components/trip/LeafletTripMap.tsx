@@ -16,7 +16,7 @@ import type { MapStop } from "@/lib/trip-utils";
  */
 
 function pin(stop: MapStop, focused: boolean) {
-  const colour = focused ? "#10201c" : stop.kind === "restaurant" ? "#b4622c" : "#0f6f5c";
+  const colour = focused ? "#ffffff" : stop.kind === "restaurant" ? "#e2955c" : "#3ad9a5";
   const label = stop.label || (stop.kind === "restaurant" ? "&#9650;" : "&#9679;");
   const size = focused ? 34 : 26;
 
@@ -25,10 +25,10 @@ function pin(stop: MapStop, focused: boolean) {
     html: `<span style="
       display:grid;place-items:center;
       min-width:${size}px;height:${size}px;padding:0 6px;
-      border-radius:999px;border:2px solid #fff;
-      background:${colour};color:#fff;
+      border-radius:999px;border:2px solid rgba(10,13,12,.9);
+      background:${colour};color:#06100c;
       font:700 ${focused ? 15 : 12}px/1 ui-sans-serif,system-ui,sans-serif;
-      box-shadow:0 ${focused ? 3 : 1}px ${focused ? 10 : 4}px rgba(0,0,0,.35);
+      box-shadow:0 ${focused ? 3 : 1}px ${focused ? 12 : 5}px rgba(0,0,0,.6);
       transition:all .15s ease;
     ">${label}</span>`,
     iconSize: [size, size],
@@ -90,7 +90,7 @@ export default function LeafletTripMap({
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         maxZoom={19}
       />

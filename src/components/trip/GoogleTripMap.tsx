@@ -83,11 +83,11 @@ export default function GoogleTripMap({
               zIndex={isFocused ? 1000 : undefined}
             >
               <span
-                className={`grid place-items-center rounded-full border-2 border-white font-bold text-white transition-all ${
+                className={`grid place-items-center rounded-full border-2 border-[#0a0d0c] font-bold text-[#06100c] transition-all ${
                   isFocused
-                    ? "h-9 min-w-9 px-2 text-sm shadow-lg bg-ink"
+                    ? "h-9 min-w-9 px-2 text-sm shadow-lg bg-white text-[#06100c]"
                     : `h-7 min-w-7 px-1.5 text-xs shadow-md ${
-                        stop.kind === "restaurant" ? "bg-[#b4622c]" : "bg-[#0f6f5c]"
+                        stop.kind === "restaurant" ? "bg-[#e2955c]" : "bg-[#3ad9a5]"
                       }`
                 }`}
               >

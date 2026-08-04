@@ -87,7 +87,7 @@ export default function PlannerForm() {
         <div className="mt-6 grid gap-5 sm:grid-cols-3">
           <div>
             <label className="label" htmlFor="startDate">
-              Start date <span className="normal-case tracking-normal">(optional)</span>
+              Start date
             </label>
             <input
               id="startDate"
@@ -136,7 +136,7 @@ export default function PlannerForm() {
         <div className="mt-6 grid gap-5 sm:grid-cols-[1fr_auto]">
           <div>
             <label className="label" htmlFor="budget">
-              Total budget, excluding flights
+              Budget
             </label>
             <div className="flex gap-2">
               <input
@@ -150,7 +150,7 @@ export default function PlannerForm() {
               />
               <select
                 aria-label="Currency"
-                className="field w-28"
+                className="field w-24"
                 value={form.currency}
                 onChange={(e) => set("currency", e.target.value as TripInput["currency"])}
               >
@@ -162,8 +162,7 @@ export default function PlannerForm() {
               </select>
             </div>
             <p className="mt-2 text-xs text-muted">
-              {formatMoney(perPersonPerDay, form.currency)} per person per day across{" "}
-              {form.travelers} {form.travelers === 1 ? "traveller" : "travellers"}.
+              {formatMoney(perPersonPerDay, form.currency)} per person per day · excludes flights
             </p>
           </div>
 
@@ -208,7 +207,7 @@ export default function PlannerForm() {
 
         <div className="mt-6">
           <label className="label" htmlFor="notes">
-            Anything else? <span className="normal-case tracking-normal">(optional)</span>
+            Anything else?
           </label>
           <textarea
             id="notes"

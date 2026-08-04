@@ -1,24 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ground: #f6f7f5;
-  --color-surface: #ffffff;
-  --color-sunk: #eceeea;
-  --color-ink: #10201c;
-  --color-ink-soft: #3c4c48;
-  --color-muted: #6b7a76;
-  --color-line: #dfe3de;
-  --color-line-strong: #c6ccc5;
-  --color-brand: #0f6f5c;
-  --color-brand-bright: #14876f;
-  --color-brand-wash: #e6f1ed;
-  --color-ember: #b4622c;
-  --color-ember-wash: #f7ece3;
+  /* Dark, technical palette. Near-black rather than pure black so elevated
+     surfaces can sit above it without needing shadows. */
+  --color-ground: #0a0d0c;
+  --color-surface: #111614;
+  --color-sunk: #0d1211;
+  --color-raised: #171d1b;
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --color-ink: #e9efec;
+  --color-ink-soft: #adbcb7;
+  --color-muted: #6f807a;
 
-  --radius-card: 16px;
+  --color-line: #1d2624;
+  --color-line-strong: #2b3733;
+
+  /* Brighter than the light-theme green: dark backgrounds need more
+     luminance to hold the same emphasis. */
+  --color-brand: #3ad9a5;
+  --color-brand-dim: #1d7c60;
+  --color-brand-wash: #0f241d;
+
+  --color-ember: #e2955c;
+  --color-ember-wash: #221810;
+
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Tighter radii than before. Softness everywhere was one of the reasons
+     the old design read as generated. */
+  --radius-card: 10px;
 }
 
 @layer base {
@@ -35,7 +46,7 @@
 
   ::selection {
     background: var(--color-brand);
-    color: white;
+    color: #05100c;
   }
 
   input,
@@ -76,9 +87,9 @@
 
   .field {
     width: 100%;
-    background: var(--color-surface);
+    background: var(--color-sunk);
     border: 1px solid var(--color-line-strong);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 0.7rem 0.85rem;
     color: var(--color-ink);
     outline: none;
@@ -93,14 +104,17 @@
 
   .field:focus {
     border-color: var(--color-brand);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 16%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 14%, transparent);
   }
 
+  /* Monospaced labels are the core of the technical register: they read as
+     field names in a tool, not headings on a brochure. */
   .label {
     display: block;
-    font-size: 0.76rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-muted);
     margin-bottom: 0.45rem;
@@ -111,7 +125,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 0.72rem 1.15rem;
     font-weight: 600;
     line-height: 1;
@@ -129,15 +143,16 @@
 
   .btn-primary {
     background: var(--color-brand);
-    color: white;
+    color: #05100c;
   }
 
   .btn-primary:hover {
-    background: var(--color-brand-bright);
+    background: #55e8b9;
   }
 
   .btn-primary:disabled {
     background: var(--color-line-strong);
+    color: var(--color-muted);
     cursor: not-allowed;
   }
 
@@ -148,43 +163,73 @@
   }
 
   .btn-ghost:hover {
-    background: var(--color-sunk);
+    background: var(--color-raised);
     color: var(--color-ink);
+    border-color: var(--color-brand-dim);
   }
 
   .chip {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    border-radius: 999px;
+    border-radius: 6px;
     border: 1px solid var(--color-line-strong);
-    background: var(--color-surface);
-    padding: 0.42rem 0.8rem;
-    font-size: 0.83rem;
+    background: var(--color-sunk);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.82rem;
     color: var(--color-ink-soft);
     cursor: pointer;
     transition: all 0.15s ease;
   }
 
   .chip:hover {
-    border-color: var(--color-brand);
-    color: var(--color-brand);
+    border-color: var(--color-brand-dim);
+    color: var(--color-ink);
   }
 
   .chip-on {
     background: var(--color-brand-wash);
-    border-color: var(--color-brand);
+    border-color: var(--color-brand-dim);
     color: var(--color-brand);
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 0.7rem;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-brand);
-    font-weight: 600;
+    font-weight: 500;
+  }
+
+  /* Hairline rule used to separate technical sections, with a label sitting
+     on it — borrowed from spec sheets rather than landing pages. */
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  /* Faint grid, the texture that stops large dark areas reading as flat. */
+  .grid-bg {
+    background-image:
+      linear-gradient(var(--color-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: -1px -1px;
   }
 }
 
@@ -219,7 +264,7 @@
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
   animation: shimmer 1.6s infinite;
 }
 
@@ -241,7 +286,17 @@
   }
 
   body {
-    background: white;
+    background: white !important;
+    color: #111 !important;
+  }
+
+  .card {
+    background: white !important;
+  }
+
+  * {
+    color: #111 !important;
+    border-color: #ccc !important;
   }
 
   /* Interactive maps do not print usefully — the tiles are lazy-loaded and
@@ -273,4 +328,56 @@
     color: #555;
     word-break: break-all;
   }
+}
+
+/* ── Leaflet on a dark page ────────────────────────────────────
+   Leaflet ships white popups, white zoom buttons and a white
+   attribution strip. Left alone they punch bright holes in the
+   dark map. */
+.leaflet-container {
+  background: #0d1211;
+  font-family: var(--font-sans);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--color-raised);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line-strong);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-popup-content {
+  margin: 0.7rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+.leaflet-popup-close-button {
+  color: var(--color-muted) !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: var(--color-ink) !important;
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: var(--color-raised);
+  color: var(--color-ink);
+  border-bottom-color: var(--color-line-strong);
+}
+
+.leaflet-bar a:hover {
+  background: var(--color-surface);
+}
+
+.leaflet-control-attribution {
+  background: rgba(10, 13, 12, 0.8) !important;
+  color: var(--color-muted) !important;
+  font-size: 10px;
+}
+
+.leaflet-control-attribution a {
+  color: var(--color-ink-soft) !important;
 }

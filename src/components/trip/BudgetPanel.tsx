@@ -1,13 +1,15 @@
 import type { GeneratedTrip } from "@/lib/types";
 import { formatMoney } from "@/lib/utils";
 
+// Brightened for the dark theme: the light-theme values disappeared against
+// a near-black background.
 const COLORS: Record<string, string> = {
-  accommodation: "#0f6f5c",
-  food: "#b4622c",
-  activities: "#3f7f9c",
-  transport: "#7a6ba8",
-  shopping: "#c2913a",
-  misc: "#8d9a96",
+  accommodation: "#3ad9a5",
+  food: "#e2955c",
+  activities: "#5aa9d6",
+  transport: "#a48ce0",
+  shopping: "#d8c05a",
+  misc: "#68807a",
 };
 
 const LABELS: Record<string, string> = {

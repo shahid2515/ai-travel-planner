@@ -1,12 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { resolveProvider } from "@/lib/llm";
 import { placesProviderLabel } from "@/lib/places";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+/**
+ * IBM Plex rather than Geist.
+ *
+ * Geist is the typeface `create-next-app` ships with, so it silently signals
+ * "untouched template" to anyone who builds with Next.js. Plex was drawn for
+ * technical documentation, the sans and mono are designed as a pair, and the
+ * mono is doing real work here — labels, times, costs and IDs all sit in it.
+ */
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
 
 // Social cards need absolute URLs. Vercel exposes the deployment host at build
 // time; falls back to localhost so previews work in development too.
@@ -42,45 +59,85 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur">
-          <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
-            <Link href="/" className="flex items-center gap-2.5">
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-sm font-bold text-white">
+        <header className="sticky top-0 z-40 border-b border-line bg-ground/80 backdrop-blur">
+          <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-5">
+            <Link href="/" className="group flex items-center gap-2.5">
+              <span className="grid h-6 w-6 place-items-center rounded bg-brand font-mono text-[11px] font-bold text-[#05100c]">
                 W
               </span>
-              <span className="text-[17px] font-semibold tracking-tight">Wayfare</span>
+              <span className="font-mono text-[13px] font-medium tracking-[0.14em] uppercase">
+                Wayfare
+              </span>
             </Link>
 
-            <nav className="flex items-center gap-1.5 text-sm">
-              <Link
-                href="/"
-                className="rounded-lg px-3 py-2 text-ink-soft transition hover:bg-sunk hover:text-ink"
-              >
-                Plan a trip
+            <nav className="flex items-center gap-6 font-mono text-[12px] tracking-wide">
+              <Link href="/" className="text-muted transition hover:text-brand">
+                plan
               </Link>
-              <Link
-                href="/trips"
-                className="rounded-lg px-3 py-2 text-ink-soft transition hover:bg-sunk hover:text-ink"
-              >
-                Saved trips
+              <Link href="/trips" className="text-muted transition hover:text-brand">
+                saved
               </Link>
+              <a
+                href="https://github.com/shahid2515/ai-travel-planner"
+                target="_blank"
+                rel="noreferrer"
+                className="text-muted transition hover:text-brand"
+              >
+                source
+              </a>
             </nav>
           </div>
         </header>
 
         <main className="flex-1">{children}</main>
 
-        <footer className="border-t border-line bg-surface">
-          <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-5 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-            {/* Named from the live config rather than hardcoded, so the footer
-                cannot drift out of date the way it just did. */}
-            <p>
-              Wayfare — a portfolio build. Next.js, {provider?.label ?? "demo data"}, {places}.
-            </p>
-            <p className="font-mono text-xs">Itineraries are AI-generated. Check opening times.</p>
+        {/* Spec-sheet footer: labelled columns, values in mono, read from the
+            live configuration so it cannot drift out of date. */}
+        <footer className="border-t border-line bg-sunk">
+          <div className="mx-auto w-full max-w-6xl px-5 py-12">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <p className="label">Runtime</p>
+                <p className="font-mono text-[13px] text-ink-soft">Next.js 16 · React 19</p>
+                <p className="font-mono text-[13px] text-ink-soft">Postgres · Prisma</p>
+              </div>
+              <div>
+                <p className="label">Generation</p>
+                <p className="font-mono text-[13px] text-ink-soft">
+                  {provider ? provider.label : "demo data"}
+                </p>
+                <p className="font-mono text-[13px] text-muted">
+                  {provider ? provider.model : "no key configured"}
+                </p>
+              </div>
+              <div>
+                <p className="label">Verification</p>
+                <p className="font-mono text-[13px] text-ink-soft">{places}</p>
+                <p className="font-mono text-[13px] text-muted">every venue re-queried</p>
+              </div>
+              <div>
+                <p className="label">Caveat</p>
+                <p className="text-[13px] leading-relaxed text-muted">
+                  Itineraries are model-generated. Opening hours and prices change — check
+                  before you book.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 font-mono text-[11px] tracking-wide text-muted">
+              <span>WAYFARE — AI TRAVEL PLANNER</span>
+              <a
+                href="https://github.com/shahid2515/ai-travel-planner"
+                target="_blank"
+                rel="noreferrer"
+                className="transition hover:text-brand"
+              >
+                github.com/shahid2515/ai-travel-planner
+              </a>
+            </div>
           </div>
         </footer>
       </body>

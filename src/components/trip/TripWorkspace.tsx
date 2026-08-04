@@ -9,8 +9,8 @@ import { formatDate, formatDuration, formatMoney, formatTime } from "@/lib/utils
 const TYPE_STYLE: Record<string, { dot: string; label: string }> = {
   attraction: { dot: "bg-brand", label: "Visit" },
   meal: { dot: "bg-ember", label: "Eat" },
-  experience: { dot: "bg-[#3f7f9c]", label: "Do" },
-  transport: { dot: "bg-[#8d9a96]", label: "Travel" },
+  experience: { dot: "bg-[#5aa9d6]", label: "Do" },
+  transport: { dot: "bg-[#68807a]", label: "Travel" },
   "free-time": { dot: "bg-line-strong", label: "Free" },
 };
 
@@ -167,10 +167,10 @@ export default function TripWorkspace({ payload }: { payload: TripPayload }) {
                       title={`Find ${stop.name} on the map`}
                       className={`relative z-10 mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 text-xs font-bold transition ${
                         isFocused
-                          ? "scale-110 border-ink bg-ink text-white"
+                          ? "scale-110 border-ink bg-ink text-ground"
                           : stop.kind === "restaurant"
-                            ? "border-ember bg-ember text-white hover:scale-110"
-                            : "border-brand bg-brand text-white hover:scale-110"
+                            ? "border-ember bg-ember text-[#1a1008] hover:scale-110"
+                            : "border-brand bg-brand text-[#05100c] hover:scale-110"
                       }`}
                     >
                       {stop.label}

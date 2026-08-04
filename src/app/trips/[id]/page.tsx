@@ -50,24 +50,30 @@ export default async function TripPage({ params }: Props) {
   return (
     <article className="pb-20">
       {/* Hero */}
-      <header className="relative border-b border-line bg-ink">
+      <header className="relative border-b border-line bg-[#060a09]">
         {hero && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={hero}
             alt={destination.name}
-            className="absolute inset-0 h-full w-full object-cover opacity-45"
+            className="absolute inset-0 h-full w-full object-cover opacity-40"
           />
         )}
-        <div className="relative mx-auto w-full max-w-6xl px-5 py-16 sm:py-20">
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-white/70">
+        {/* Fades the photograph into the page rather than cutting it with a
+            hard edge — the join is what made it look pasted on. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-ground via-[#060a09]/70 to-[#060a09]/30"
+        />
+        <div className="relative mx-auto w-full max-w-6xl px-5 py-16 sm:py-24">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-brand">
             {destination.name}
             {destination.country ? `, ${destination.country}` : ""}
           </p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl">
+          <h1 className="mt-4 max-w-3xl text-[clamp(2.2rem,5vw,3.4rem)] font-semibold leading-[1.0] tracking-[-0.03em] text-white">
             {trip.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/85">{trip.summary}</p>
+          <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-white/70">{trip.summary}</p>
 
           <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-white">
             {[
@@ -77,10 +83,10 @@ export default async function TripPage({ params }: Props) {
               ["Plan", `${activities} stops across ${trip.days.length} days`],
             ].map(([label, value]) => (
               <div key={label}>
-                <dt className="font-mono text-[11px] uppercase tracking-wider text-white/60">
+                <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-white/45">
                   {label}
                 </dt>
-                <dd className="mt-0.5 text-sm font-semibold">{value}</dd>
+                <dd className="mt-1 font-mono text-sm font-medium">{value}</dd>
               </div>
             ))}
           </dl>
